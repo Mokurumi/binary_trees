@@ -1,5 +1,6 @@
 #include "binary_trees.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 /**
  * binary_tree_levelorder - traverses a binary tree using level-order traversal
@@ -8,37 +9,30 @@
  */
 void binary_tree_levelorder(const binary_tree_t *tree, void (*func)(int))
 {
-	binary_tree_t **queue = NULL, *current;
-	size_t front = 0, rear = 0;
+	const binary_tree_t **queue, *current;
+	int front = 0, rear = 0;
 
 	if (tree == NULL || func == NULL)
 		return;
 
-	queue = malloc(sizeof(binary_tree_t *) * 1024);
-	if (queue == NULL)
-		return;
+	/* Queue to store nodes for level-order traversal */
+	queue = malloc(sizeof(binary_tree_t *) * 1000);
 
-	queue[rear] = (binary_tree_t *)tree;
-	rear++;
+	current = tree;
+	queue[rear++] = current;
 
 	while (front < rear)
 	{
-		*current = queue[front];
-		front++;
-
+		current = queue[front++];
 		func(current->n);
 
+		/* Enqueue left child */
 		if (current->left != NULL)
-		{
-			queue[rear] = current->left;
-			rear++;
-		}
+			queue[rear++] = current->left;
 
+		/* Enqueue right child */
 		if (current->right != NULL)
-		{
-			queue[rear] = current->right;
-			rear++;
-		}
+			queue[rear++] = current->right;
 	}
 
 	free(queue);

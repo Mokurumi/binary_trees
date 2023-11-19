@@ -11,42 +11,51 @@
  */
 int binary_tree_is_complete(const binary_tree_t *tree)
 {
-	int current_level_nodes, i, level = 0;
-	bool end = false;
-	binary_tree_t **queue, *current;
+
+	const binary_tree_t **queue, *current;
+	int front = 0, rear = 0;
+	bool flag = false;
 
 	if (tree == NULL)
 		return (0);
 
-	**queue = malloc(sizeof(binary_tree_t *) * 1024);
-	if (queue == NULL)
-		return (0);
+	/* Create a queue to perform level-order traversal */
+	queue = malloc(sizeof(binary_tree_t *) * 1000);
 
-	queue[0] = (binary_tree_t *)tree;
+	current = tree;
+	queue[rear++] = current;
 
-	while (queue[level] != NULL)
+	while (front < rear)
 	{
-		current_level_nodes = 1 << level;
-		for (i = 0; i < current_level_nodes; i++)
+		current = queue[front++];
+
+		/* If a node has no left child, it should not have a right child */
+		if (current->left == NULL)
+			flag = true;
+		else if (flag)
 		{
-			*current = queue[i + current_level_nodes];
-			if (current == NULL)
-				end = true;
-			else
-			{
-				if (end)
-				{
-					free(queue);
-					return (0);
-				}
-				queue[i] = current;
-			}
+			free(queue);
+			return (0);
 		}
-		if (!end)
-			queue[current_level_nodes] = NULL;
-		level++;
+		else
+			queue[rear++] = current->left;
+
+		/**
+		 * If a node has no right child,
+		 * all subsequent nodes must also not have a left or right child
+		 */
+		if (current->right == NULL)
+			flag = true;
+		else if (flag)
+		{
+			free(queue);
+			return (0);
+		}
+		else
+			queue[rear++] = current->right;
 	}
 
 	free(queue);
 	return (1);
 }
+
