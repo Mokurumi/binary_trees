@@ -11,7 +11,6 @@
  */
 int binary_tree_is_complete(const binary_tree_t *tree)
 {
-
 	const binary_tree_t **queue, *current;
 	int front = 0, rear = 0;
 	bool flag = false;
@@ -19,16 +18,13 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 	if (tree == NULL)
 		return (0);
 
-	/* Create a queue to perform level-order traversal */
 	queue = malloc(sizeof(binary_tree_t *) * 1000);
-
 	current = tree;
 	queue[rear++] = current;
 
 	while (front < rear)
 	{
 		current = queue[front++];
-
 		/* If a node has no left child, it should not have a right child */
 		if (current->left == NULL)
 			flag = true;
@@ -40,10 +36,8 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 		else
 			queue[rear++] = current->left;
 
-		/**
-		 * If a node has no right child,
-		 * all subsequent nodes must also not have a left or right child
-		 */
+		/* If a node has no right child, */
+		/* all subsequent nodes must also not have a left or right child */
 		if (current->right == NULL)
 			flag = true;
 		else if (flag)
@@ -54,7 +48,6 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 		else
 			queue[rear++] = current->right;
 	}
-
 	free(queue);
 	return (1);
 }
