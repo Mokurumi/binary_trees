@@ -23,6 +23,9 @@ struct binary_tree_s
 };
 
 typedef struct binary_tree_s binary_tree_t;
+typedef struct binary_tree_s bst_t;
+typedef struct binary_tree_s avl_t;
+typedef struct binary_tree_s heap_t;
 
 void binary_tree_print(const binary_tree_t *tree);
 
@@ -68,5 +71,7 @@ heap_t *array_to_heap(int *array, size_t size);
 int heap_extract(heap_t **root);
 int *heap_to_sorted_array(heap_t *heap, size_t *size);
 */
+
+int is_bst_helper(const binary_tree_t *tree, int min, int max);
 
 #endif /* BINARY_TREES_H */
