@@ -17,11 +17,11 @@ int binary_tree_is_bst(const binary_tree_t *tree)
 	if (tree == NULL)
 		return (0);
 
-	return (is_bst_helper(tree, min, max));
+	return (bst_helper(tree, min, max));
 }
 
 /**
- * is_bst_helper - Helper function to recursively check if tree is a valid BST
+ * bst_helper - Helper function to recursively check if tree is a valid BST
  *
  * @tree: Pointer to the current node
  * @min: Minimum value a node can take (INT_MIN for root node)
@@ -29,7 +29,7 @@ int binary_tree_is_bst(const binary_tree_t *tree)
  *
  * Return: 1 if the tree is a valid BST, 0 otherwise
  */
-int is_bst_helper(const binary_tree_t *tree, int min, int max)
+int bst_helper(const binary_tree_t *tree, int min, int max)
 {
 	if (tree == NULL)
 		return (1); /* An empty tree is considered as a BST */
@@ -39,6 +39,6 @@ int is_bst_helper(const binary_tree_t *tree, int min, int max)
 		return (0);
 
 	/* Recursively check the left and right subtrees */
-	return (is_bst_helper(tree->left, min, tree->n)
-			&& is_bst_helper(tree->right, tree->n, max));
+	return (bst_helper(tree->left, min, tree->n)
+			&& bst_helper(tree->right, tree->n, max));
 }
