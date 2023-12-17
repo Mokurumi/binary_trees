@@ -10,29 +10,44 @@
  */
 bst_t *bst_insert(bst_t **tree, int value)
 {
-	if (tree == NULL)
+	bst_t *new_node = NULL, *current = NULL;
+
+	if (!tree)
 		return (NULL);
 
-	/* If the tree is empty, create a new node and make it the root */
-	if (*tree == NULL)
+	current = *tree;
+	while (current)
 	{
-		*tree = malloc(sizeof(bst_t));
-		if (*tree == NULL)
-			return (NULL); /* Memory allocation failed */
-
-		(*tree)->value = value;
-		(*tree)->left = (*tree)->right = NULL;
-		return (*tree);
+		if (value == current->n)
+			return (NULL);
+		if (value < current->n)
+		{
+			if (!current->left)
+			{
+				new_node = binary_tree_node(current, value);
+				if (!new_node)
+					return (NULL);
+				current->left = new_node;
+				return (new_node);
+			}
+			current = current->left;
+		}
+		else
+		{
+			if (!current->right)
+			{
+				new_node = binary_tree_node(current, value);
+				if (!new_node)
+					return (NULL);
+				current->right = new_node;
+				return (new_node);
+			}
+			current = current->right;
+		}
 	}
-
-	/* If the value is already present in the tree, ignore it */
-	if ((*tree)->value == value)
+	new_node = binary_tree_node(current, value);
+	if (!new_node)
 		return (NULL);
-
-	/* If the value is less than the current node's value, go left */
-	if (value < (*tree)->value)
-		return (bst_insert(&((*tree)->left), value));
-	/* If the value is greater than the current node's value, go right */
-	else
-		return (bst_insert(&((*tree)->right), value));
+	*tree = new_node;
+	return (new_node);
 }
