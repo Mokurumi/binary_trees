@@ -9,6 +9,8 @@
  */
 avl_t *avl_insert(avl_t **tree, int value)
 {
+	int balance;
+
 	if (tree == NULL)
 		return (NULL);
 
@@ -25,7 +27,7 @@ avl_t *avl_insert(avl_t **tree, int value)
 	else
 		return (NULL);
 
-	int balance = binary_tree_balance(*tree);
+	balance = binary_tree_balance(*tree);
 
 	if (balance > 1 && value < (*tree)->left->n)
 		*tree = binary_tree_rotate_right(*tree);
