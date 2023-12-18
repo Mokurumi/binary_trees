@@ -1,7 +1,5 @@
 #include "binary_trees.h"
 #include <stdlib.h>
-#include "0-binary_tree_node.c"
-#include "11-binary_tree_size.c"
 
 /**
  * heap_insert - inserts a value into a Max Binary Heap
@@ -77,4 +75,45 @@ void swap_nodes(heap_t *node)
 		else
 			break;
 	}
+}
+
+/**
+ * binary_tree_size - measures the size of a binary tree
+ * @tree: pointer to the root node of the tree
+ *
+ * Return: size of the tree, or 0 on failure
+ */
+size_t binary_tree_size(const heap_t *tree)
+{
+	size_t size;
+
+	if (!tree)
+		return (0);
+
+	size = 1 + binary_tree_size(tree->left) + binary_tree_size(tree->right);
+
+	return (size);
+}
+
+/**
+ * binary_tree_node - creates a binary tree node
+ * @parent: pointer to the parent node of the node to create
+ * @value: value to store in the new node
+ *
+ * Return: pointer to the new node, or NULL on failure
+ */
+heap_t *binary_tree_node(heap_t *parent, int value)
+{
+	heap_t *new_node = NULL;
+
+	new_node = malloc(sizeof(heap_t));
+	if (!new_node)
+		return (NULL);
+
+	new_node->n = value;
+	new_node->parent = parent;
+	new_node->left = NULL;
+	new_node->right = NULL;
+
+	return (new_node);
 }
