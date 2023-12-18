@@ -77,7 +77,7 @@ int bst_helper(const binary_tree_t *tree, int min, int max);
 void insert_node(heap_t *root, heap_t *node);
 void swap_nodes(heap_t *node);
 heap_t *get_node(heap_t *root, size_t index);
-heap_t *get_last_node(heap_t *root)
-void heapify(heap_t *root)
+heap_t *get_last_node(heap_t *root);
+void heapify(heap_t *root);
 
 #endif /* BINARY_TREES_H */
