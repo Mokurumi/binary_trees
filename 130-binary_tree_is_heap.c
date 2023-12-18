@@ -8,7 +8,7 @@
  */
 int binary_tree_is_heap(const binary_tree_t *tree)
 {
-	int left = 0, right = 0;
+	int left, right;
 
 	if (!tree)
 		return (0);
@@ -21,14 +21,17 @@ int binary_tree_is_heap(const binary_tree_t *tree)
 		if (tree->left->n > tree->n)
 			return (0);
 		left = binary_tree_is_heap(tree->left);
+		if (!left)
+			return (0);
 	}
-
 	if (tree->right)
 	{
 		if (tree->right->n > tree->n)
 			return (0);
 		right = binary_tree_is_heap(tree->right);
+		if (!right)
+			return (0);
 	}
 
-	return (left && right);
+	return (1);
 }
