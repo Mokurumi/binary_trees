@@ -1,4 +1,5 @@
 #include "binary_trees.h"
+#include <stdlib.h>
 
 /**
  * heap_extract - extracts the root node of a Max Binary Heap
@@ -8,60 +9,115 @@
  */
 int heap_extract(heap_t **root)
 {
-	heap_t *last_node, *temp, *max_node;
-	int value, temp_value;
+	int value;
+	heap_t *node;
 
-	if (root == NULL || *root == NULL)
+	if (!root || !*root)
 		return (0);
 
-	value = (*root)->n;
-	last_node = *root;
-	while (last_node && last_node->left)
-	{
-		last_node = last_node->left;
-		if (last_node->right)
-			last_node = last_node->right;
-	}
+	node = *root;
+	value = node->n;
 
-	if (last_node == *root)
+	if (!node->left && !node->right)
 	{
-		free(*root);
 		*root = NULL;
+		free(node);
 		return (value);
 	}
 
-	temp = *root;
-	while (temp->left && temp->left != last_node && temp->right != last_node)
-	{
-		temp = temp->left;
-		if (temp->right && temp->right != last_node)
-			temp = temp->right;
-	}
+	node = get_last_node(node);
+	if (node->parent->left == node)
+		node->parent->left = NULL;
+	else
+		node->parent->right = NULL;
 
-	if (temp->left)
-		temp->left = NULL;
-	else if (temp->right)
-		temp->right = NULL;
+	(*root)->n = node->n;
+	free(node);
 
-	(*root)->n = last_node->n;
-	free(last_node);
-
-	while (1)
-	{
-		max_node = *root;
-		if (max_node->left && max_node->left->n > max_node->n)
-			max_node = max_node->left;
-		if (max_node->right && max_node->right->n > max_node->n)
-			max_node = max_node->right;
-
-		if (max_node == *root)
-			break;
-
-		temp_value = (*root)->n;
-		(*root)->n = max_node->n;
-		max_node->n = temp_value;
-		*root = max_node;
-	}
+	heapify(*root);
 
 	return (value);
+}
+
+/**
+ * get_last_node - gets the last node of a Max Binary Heap
+ * @root: pointer to the root node of the heap
+ *
+ * Return: pointer to the last node, or NULL on failure
+ */
+heap_t *get_last_node(heap_t *root)
+{
+	int size, path;
+	heap_t *node;
+
+	size = binary_tree_size(root);
+	path = size / 2;
+	node = root;
+
+	while (path > 0)
+	{
+		if (path & 1)
+			node = node->right;
+		else
+			node = node->left;
+		path /= 2;
+	}
+
+	return (node);
+}
+
+/**
+ * binary_tree_size - measures the size of a binary tree
+ * @tree: pointer to the root node of the tree
+ *
+ * Return: size of the tree, or 0 on failure
+ */
+size_t binary_tree_size(const heap_t *tree)
+{
+	size_t size;
+
+	if (!tree)
+		return (0);
+
+	size = 1 + binary_tree_size(tree->left) + binary_tree_size(tree->right);
+
+	return (size);
+}
+
+/**
+ * heapify - heapifies a Max Binary Heap
+ * @root: pointer to the root node of the heap
+ */
+void heapify(heap_t *root)
+{
+	int temp;
+	heap_t *node;
+
+	if (!root)
+		return;
+
+	node = root;
+	while (node->left)
+	{
+		if (!node->right || node->left->n > node->right->n)
+		{
+			if (node->left->n > node->n)
+			{
+				temp = node->n;
+				node->n = node->left->n;
+				node->left->n = temp;
+			}
+			node = node->left;
+		}
+		else
+		{
+			if (node->right->n > node->n)
+			{
+				temp = node->n;
+				node->n = node->right->n;
+				node->right->n = temp;
+			}
+			node = node->right;
+		}
+	}
 }
